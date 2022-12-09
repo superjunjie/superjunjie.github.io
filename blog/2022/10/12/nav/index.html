@@ -1,0 +1,181 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>浏览器导航流程 | Jerry's Bolg</title><meta name="author" content="Jerry"><meta name="copyright" content="Jerry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从输入url到页面展示，这中间发生了什么？ 浏览器进程判断当前输入内容，有以下两种情况 关键词。调用默认搜索引擎搜索关键词 URL。浏览器会根据规则将输入内容拼接为完整的URL   执行当前页面beforeload事件 通过IPC通信将请求事件发送给网络进程 网络进程检查本地是否存在有效缓存 DNS解析，获取目标网站IP地址 如果网站协议为HTTPS，进行CA认证，建立TSL连接， 与服务器建立T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器导航流程">
+<meta property="og:url" content="https://superjunjie.github.io/blog/2022/10/12/nav/index.html">
+<meta property="og:site_name" content="Jerry&#39;s Bolg">
+<meta property="og:description" content="从输入url到页面展示，这中间发生了什么？ 浏览器进程判断当前输入内容，有以下两种情况 关键词。调用默认搜索引擎搜索关键词 URL。浏览器会根据规则将输入内容拼接为完整的URL   执行当前页面beforeload事件 通过IPC通信将请求事件发送给网络进程 网络进程检查本地是否存在有效缓存 DNS解析，获取目标网站IP地址 如果网站协议为HTTPS，进行CA认证，建立TSL连接， 与服务器建立T">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://superjunjie.github.io/blog/img/14.webp">
+<meta property="article:published_time" content="2022-10-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-09T01:21:40.713Z">
+<meta property="article:author" content="Jerry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://superjunjie.github.io/blog/img/14.webp"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://superjunjie.github.io/blog/2022/10/12/nav/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浏览器导航流程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-12-09 09:21:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/blog/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/blog/./img/14.webp')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Jerry's Bolg</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">浏览器导航流程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-12-09T01:21:40.713Z" title="Updated 2022-12-09 09:21:40">2022-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/">前端面试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="浏览器导航流程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="从输入url到页面展示，这中间发生了什么？"><a href="#从输入url到页面展示，这中间发生了什么？" class="headerlink" title="从输入url到页面展示，这中间发生了什么？"></a>从输入url到页面展示，这中间发生了什么？</h2><ol>
+<li>浏览器进程判断当前输入内容，有以下两种情况<ol>
+<li>关键词。调用默认搜索引擎搜索关键词</li>
+<li>URL。浏览器会根据规则将输入内容拼接为完整的URL</li>
+</ol>
+</li>
+<li>执行当前页面beforeload事件</li>
+<li>通过IPC通信将请求事件发送给网络进程</li>
+<li>网络进程检查本地是否存在有效缓存</li>
+<li>DNS解析，获取目标网站IP地址</li>
+<li>如果网站协议为HTTPS，进行CA认证，建立TSL连接，</li>
+<li>与服务器建立TCP连接后，浏览器会构建请求信息，并带上cookies，将请求发送给服务器</li>
+<li>收到响应后，网络进程解析响应头<ol>
+<li>如果响应状态码301， 302就重定向到目标地址</li>
+<li>如果状态码是304 No Modifily，复用缓存</li>
+<li>如果是200。判断响应头中的content-type，对不同类型的Content-Type，浏览器会分别处理<ol>
+<li>如果是text&#x2F;html，网络进程会与渲染进程建立数据传输管道。完成数据传输后，网络进程会告知浏览器进程，浏览器进程会更新页面状态</li>
+<li>如果是application&#x2F;octet-stream，按下载类型处理请求，结束导航</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>准备渲染进程。如果浏览器中存在同一个域名下的标签页，则复用渲染进程，如果没有就创建一个</li>
+<li>解析响应内容</li>
+<li>建构DOM树</li>
+<li>解析样式。将css文本解析成浏览器可以理解的styleSheet结构，包括属性值标准化</li>
+<li>解析到资源请求标签。会根据标签url自动发起get请求获取资源</li>
+<li>计算DOM树中每个节点的样式。依据样式继承规则计算样式</li>
+<li>创建布局树。去除掉非可见元素，如link、script标签，以及display为none的元素</li>
+<li>分层。根据布局树生成图层树，常见的分层使用有z-index属性</li>
+<li>绘制图层</li>
+<li>栅格化。渲染主线程将绘制列表提交给合成线程， 合成线程收到消息后将图层划分为图块，根据当前视口位置，确定图块绘制的优先级，使用GUP快速栅格化并生成位图，并保存在 GPU 的内存中</li>
+<li>所有的图块都栅格化后，合成线程会生成一个绘图执行交给浏览器进程，浏览器将页面内容绘制到内存中，最终显示在页面</li>
+</ol>
+<h2 id="重排"><a href="#重排" class="headerlink" title="重排"></a>重排</h2><p>如果修改了页面中元素的几何位置属性，例如改变了元素的高度或宽度，浏览器会触发重新布局，需要重新执行渲染流水线</p>
+<h2 id="重绘"><a href="#重绘" class="headerlink" title="重绘"></a>重绘</h2><p>如果仅仅改变了元素的显示样式，没有改变几何位置属性。那么浏览器就不会重新布局，而是直接进入到绘制阶段</p>
+<h2 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h2><p>利用css transform属性实现动画，减少重排，重绘。直接原因是合成是在非主线程中执行的，不会占用主线程资源</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://superjunjie.github.io/blog">Jerry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://superjunjie.github.io/blog/2022/10/12/nav/">https://superjunjie.github.io/blog/2022/10/12/nav/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/blog/./img/14.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/blog/2022/10/12/regex/"><img class="next-cover" src="/blog/./img/15.webp" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">正则表达式</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/blog/img/avatar.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jerry</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/superjunjie"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/superjunjie" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:pcxiaoyan@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BE%93%E5%85%A5url%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%B1%95%E7%A4%BA%EF%BC%8C%E8%BF%99%E4%B8%AD%E9%97%B4%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">从输入url到页面展示，这中间发生了什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%8E%92"><span class="toc-number">2.</span> <span class="toc-text">重排</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%BB%98"><span class="toc-number">3.</span> <span class="toc-text">重绘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%88%E6%88%90"><span class="toc-number">4.</span> <span class="toc-text">合成</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/nav/" title="浏览器导航流程"><img src="/blog/./img/14.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="浏览器导航流程"/></a><div class="content"><a class="title" href="/blog/2022/10/12/nav/" title="浏览器导航流程">浏览器导航流程</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/regex/" title="正则表达式"><img src="/blog/./img/15.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="正则表达式"/></a><div class="content"><a class="title" href="/blog/2022/10/12/regex/" title="正则表达式">正则表达式</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/tcp/" title="TCP"><img src="/blog/./img/16.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="TCP"/></a><div class="content"><a class="title" href="/blog/2022/10/12/tcp/" title="TCP">TCP</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/tsl/" title="TSL安全传输"><img src="/blog/./img/17.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="TSL安全传输"/></a><div class="content"><a class="title" href="/blog/2022/10/12/tsl/" title="TSL安全传输">TSL安全传输</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/vue2-vs-vue3/" title="Vue2 vs Vue3"><img src="/blog/./img/18.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Vue2 vs Vue3"/></a><div class="content"><a class="title" href="/blog/2022/10/12/vue2-vs-vue3/" title="Vue2 vs Vue3">Vue2 vs Vue3</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Jerry</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

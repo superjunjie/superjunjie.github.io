@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Vue2 vs Vue3 | Jerry's Bolg</title><meta name="author" content="Jerry"><meta name="copyright" content="Jerry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在 响应式对比Vue2响应式原理Vue2通过使用Object.defineProperty提供的get和set方法实现了对数据访问的监听以及对数据修改的劫持。由于Object.defineProperty的设计初衷不是为实现响应式设计的，所有使用这种方式在监听数据变化会存在下面这些问题或能力不足：  无法监听数组的变化，不支持使用下标直接修改数组内容，改变数组length属性无法被监听到。vue通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue2 vs Vue3">
+<meta property="og:url" content="https://superjunjie.github.io/blog/2022/10/12/vue2-vs-vue3/index.html">
+<meta property="og:site_name" content="Jerry&#39;s Bolg">
+<meta property="og:description" content="在 响应式对比Vue2响应式原理Vue2通过使用Object.defineProperty提供的get和set方法实现了对数据访问的监听以及对数据修改的劫持。由于Object.defineProperty的设计初衷不是为实现响应式设计的，所有使用这种方式在监听数据变化会存在下面这些问题或能力不足：  无法监听数组的变化，不支持使用下标直接修改数组内容，改变数组length属性无法被监听到。vue通">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://superjunjie.github.io/blog/img/18.webp">
+<meta property="article:published_time" content="2022-10-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-09T01:27:49.469Z">
+<meta property="article:author" content="Jerry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://superjunjie.github.io/blog/img/18.webp"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://superjunjie.github.io/blog/2022/10/12/vue2-vs-vue3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vue2 vs Vue3',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-12-09 09:27:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/blog/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/blog/./img/18.webp')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Jerry's Bolg</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Vue2 vs Vue3</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-12-09T01:27:49.469Z" title="Updated 2022-12-09 09:27:49">2022-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/">前端框架</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Vue2 vs Vue3"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>在</p>
+<h2 id="响应式对比"><a href="#响应式对比" class="headerlink" title="响应式对比"></a>响应式对比</h2><h3 id="Vue2响应式原理"><a href="#Vue2响应式原理" class="headerlink" title="Vue2响应式原理"></a>Vue2响应式原理</h3><p>Vue2通过使用<strong>Object.defineProperty</strong>提供的<strong>get</strong>和<strong>set</strong>方法实现了对<strong>数据访问的监听</strong>以及对<strong>数据修改的劫持</strong>。由于<strong>Object.defineProperty</strong>的设计初衷不是为实现响应式设计的，所有使用这种方式在监听数据变化会存在下面这些问题或能力不足：</p>
+<ol>
+<li>无法监听数组的变化，不支持使用下标直接修改数组内容，改变数组length属性无法被监听到。vue通过提供$set$del方法弥补了功能上的缺陷</li>
+<li>无法监听新增属性以及已有属性删除</li>
+<li>无法监听异质对象的变化，如Map，Set，WeakMap，WeakSet</li>
+</ol>
+<h3 id="Vue3响应式原理"><a href="#Vue3响应式原理" class="headerlink" title="Vue3响应式原理"></a>Vue3响应式原理</h3><p>通过使用<strong>Proxy+Reflect</strong>实现对数据的访问监听和修改劫持，相较于Vue2中的<strong>Object.defineProperty</strong>，Vue3中的响应式实现有下面这些优点</p>
+<ol>
+<li>可以监听数组的变化</li>
+<li>可以监听新增属性和删除属性</li>
+<li>可以监听异质对象</li>
+<li>支持包括get和set在内的13种数据方法访问监听</li>
+</ol>
+<h2 id="composition-Vs-options"><a href="#composition-Vs-options" class="headerlink" title="composition Vs options"></a>composition Vs options</h2><h3 id="options-api"><a href="#options-api" class="headerlink" title="options api"></a>options api</h3><p>在options api中，业务逻辑被分散在各个模块，随着业务的复杂度越来越高，代码量会不断加大；由于相关业务的代码需要遵守option配置写到特定的区域，导致后续的维护变得非常复杂，代码的可复用性也不高。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/25869861/1669728132513-3f359988-5e2a-4663-9ed5-719f410db594.png#averageHue=%23020101&clientId=u98402055-77c9-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=225&id=u09913f50&margin=%5Bobject%20Object%5D&name=image.png&originHeight=449&originWidth=671&originalType=binary&ratio=1&rotation=0&showTitle=false&size=63956&status=done&style=none&taskId=u109c4e2e-ee4e-4d39-a61a-20a8a3f9e77&title=&width=335.5" alt="image.png"></p>
+<h3 id="composition-api"><a href="#composition-api" class="headerlink" title="composition api"></a>composition api</h3><p>使用composition api后，可以将相同业务逻辑放到一个函数中，业务代码之间的耦合度更高，更方便后续业务的扩展以及代码维护<br><img src="https://cdn.nlark.com/yuque/0/2022/png/25869861/1669728215209-c83e150e-6e71-42d2-87ce-d693d3ed6d12.png#averageHue=%23110d0b&clientId=u98402055-77c9-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=277&id=u9e2b2057&margin=%5Bobject%20Object%5D&name=image.png&originHeight=554&originWidth=704&originalType=binary&ratio=1&rotation=0&showTitle=false&size=117978&status=done&style=none&taskId=ub31cda8f-ae0e-487e-8523-812b3a8b90c&title=&width=352" alt="image.png"></p>
+<h2 id="生命周期对比"><a href="#生命周期对比" class="headerlink" title="生命周期对比"></a>生命周期对比</h2><table>
+<thead>
+<tr>
+<th>Vue2</th>
+<th>Vue3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beforeCreate</td>
+<td>setup</td>
+</tr>
+<tr>
+<td>created</td>
+<td></td>
+</tr>
+<tr>
+<td>beforeMount</td>
+<td>onBeforeMounted</td>
+</tr>
+<tr>
+<td>mounted</td>
+<td>onMounted</td>
+</tr>
+<tr>
+<td>beforeUpdate</td>
+<td>onBeforeUpdate</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>onUpdated</td>
+</tr>
+<tr>
+<td>beforeDestory</td>
+<td>onBeforeUnmount</td>
+</tr>
+<tr>
+<td>destoryed</td>
+<td>onUnmounted</td>
+</tr>
+</tbody></table>
+<h2 id="Vue3相较于Vue2的优点"><a href="#Vue3相较于Vue2的优点" class="headerlink" title="Vue3相较于Vue2的优点"></a>Vue3相较于Vue2的优点</h2><h3 id="支持多根节点"><a href="#支持多根节点" class="headerlink" title="支持多根节点"></a>支持多根节点</h3><p>相较于Vue2的每个template下面只能有一个根节点，vue3支持多根节点</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">header</span>&gt;</span><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">main</span>&gt;</span><span class="tag">&lt;/<span class="name">main</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">footer</span>&gt;</span><span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="支持异步组件（Supense）"><a href="#支持异步组件（Supense）" class="headerlink" title="支持异步组件（Supense）"></a>支持异步组件（Supense）</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 多根节点suspenses使用 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">tempalte</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">suspense</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">template</span> #<span class="attr">default</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">List</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">template</span> #<span class="attr">fallback</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        Loading...</span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">suspense</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="支持Teleport"><a href="#支持Teleport" class="headerlink" title="支持Teleport"></a>支持Teleport</h3><p>使用vue3天提供的<strong>telport</strong>内置组件，可将组件渲染到指定DOM节点下面</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;dialogVisible = true&quot;</span>&gt;</span>显示弹窗<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">teleport</span> <span class="attr">to</span>=<span class="string">&quot;body&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;dialog&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;dialogVisible&quot;</span>&gt;</span></span><br><span class="line">    我是弹窗，我直接移动到了body标签下</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">teleport</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="静态节点hoistStatic提升"><a href="#静态节点hoistStatic提升" class="headerlink" title="静态节点hoistStatic提升"></a>静态节点hoistStatic提升</h3><p>在Vue2中，无论元素是否为静态节点，每次创建的时候都会被渲染。在vue3中对于是静态节点的元素，会进行变量提升，静态节点元素会被创建一次，在渲染的时候直接复用即可，对与下面要渲染的内容，vue3会以下处理</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>静态节点hoistStatict提升<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Vue3性能优化<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;&#123;name&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createElementVNode <span class="keyword">as</span> _createElementVNode, toDisplayString <span class="keyword">as</span> _toDisplayString, openBlock <span class="keyword">as</span> _openBlock, createElementBlock <span class="keyword">as</span> _createElementBlock, pushScopeId <span class="keyword">as</span> _pushScopeId, popScopeId <span class="keyword">as</span> _popScopeId &#125; <span class="keyword">from</span> vue</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">_withScopeId</span> = n =&gt; (<span class="title function_">_pushScopeId</span>(scope-id),n=<span class="title function_">n</span>(),<span class="title function_">_popScopeId</span>(),n)</span><br><span class="line"><span class="keyword">const</span> _hoisted_1 = &#123; <span class="attr">id</span>: app &#125;</span><br><span class="line"><span class="keyword">const</span> _hoisted_2 = <span class="comment">/*#__PURE__*/</span> <span class="title function_">_withScopeId</span>(<span class="function">() =&gt;</span> <span class="comment">/*#__PURE__*/</span><span class="title function_">_createElementVNode</span>(h1, <span class="literal">null</span>, 静态节点hoistStatict提升, -<span class="number">1</span> <span class="comment">/* HOISTED */</span>))</span><br><span class="line"><span class="keyword">const</span> _hoisted_3 = <span class="comment">/*#__PURE__*/</span> <span class="title function_">_withScopeId</span>(<span class="function">() =&gt;</span> <span class="comment">/*#__PURE__*/</span><span class="title function_">_createElementVNode</span>(p, <span class="literal">null</span>, <span class="title class_">Vue3</span>性能优化, -<span class="number">1</span> <span class="comment">/* HOISTED */</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">render</span>(<span class="params">_ctx, _cache, $props, $setup, $data, $options</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (<span class="title function_">_openBlock</span>(), <span class="title function_">_createElementBlock</span>(div, _hoisted_1, [</span><br><span class="line">    _hoisted_2,</span><br><span class="line">    _hoisted_3,</span><br><span class="line">    <span class="title function_">_createElementVNode</span>(div, <span class="literal">null</span>, <span class="title function_">_toDisplayString</span>(_ctx.<span class="property">name</span>), <span class="number">1</span> <span class="comment">/* TEXT */</span>)</span><br><span class="line">  ]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="增加静态标记（pathFlags）"><a href="#增加静态标记（pathFlags）" class="headerlink" title="增加静态标记（pathFlags）"></a>增加静态标记（pathFlags）</h3><p>在创建vnode的时候，如果是动态节点，vue框架会识别出这个节点需要动态渲染内容的类型并标记patchflag。当视图更新时，只对动态节点部分进行diff运算，减少了资源的损耗</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// patchFlags 字段类型列举</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> enum <span class="title class_">PatchFlags</span> &#123; </span><br><span class="line">  <span class="variable constant_">TEXT</span> = <span class="number">1</span>,   <span class="comment">// 动态文本内容</span></span><br><span class="line">  <span class="variable constant_">CLASS</span> = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,   <span class="comment">// 动态类名</span></span><br><span class="line">  <span class="variable constant_">STYLE</span> = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,   <span class="comment">// 动态样式</span></span><br><span class="line">  <span class="variable constant_">PROPS</span> = <span class="number">1</span> &lt;&lt; <span class="number">3</span>,   <span class="comment">// 动态属性，不包含类名和样式</span></span><br><span class="line">  <span class="variable constant_">FULL_PROPS</span> = <span class="number">1</span> &lt;&lt; <span class="number">4</span>,   <span class="comment">// 具有动态 key 属性，当 key 改变，需要进行完整的 diff 比较</span></span><br><span class="line">  <span class="variable constant_">HYDRATE_EVENTS</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span>,   <span class="comment">// 带有监听事件的节点</span></span><br><span class="line">  <span class="variable constant_">STABLE_FRAGMENT</span> = <span class="number">1</span> &lt;&lt; <span class="number">6</span>,   <span class="comment">// 不会改变子节点顺序的 fragment</span></span><br><span class="line">  <span class="variable constant_">KEYED_FRAGMENT</span> = <span class="number">1</span> &lt;&lt; <span class="number">7</span>,   <span class="comment">// 带有 key 属性的 fragment 或部分子节点</span></span><br><span class="line">  <span class="variable constant_">UNKEYED_FRAGMENT</span> = <span class="number">1</span> &lt;&lt; <span class="number">8</span>,   <span class="comment">// 子节点没有 key 的fragment</span></span><br><span class="line">  <span class="variable constant_">NEED_PATCH</span> = <span class="number">1</span> &lt;&lt; <span class="number">9</span>,   <span class="comment">// 只会进行非 props 的比较</span></span><br><span class="line">  <span class="variable constant_">DYNAMIC_SLOTS</span> = <span class="number">1</span> &lt;&lt; <span class="number">10</span>,   <span class="comment">// 动态的插槽</span></span><br><span class="line">  <span class="variable constant_">HOISTED</span> = -<span class="number">1</span>,   <span class="comment">// 静态节点，diff阶段忽略其子节点</span></span><br><span class="line">  <span class="variable constant_">BAIL</span> = -<span class="number">2</span>   <span class="comment">// 代表 diff 应该结束</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="事件缓存cacheHandlers"><a href="#事件缓存cacheHandlers" class="headerlink" title="事件缓存cacheHandlers"></a>事件缓存cacheHandlers</h3><p>在Vue2中，绑定事件每次触发都会生成全新的function去更新，cacheHandlers 是Vue3中提供的事件缓存对象，当 cacheHandlers 开启，会自动生成一个内联函数，同时生成一个静态节点。当事件再次触发时，只需从缓存中调用即可，无需再次更新。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">render</span>(<span class="params">...</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="title function_">_openBlock</span>(),<span class="title function_">_createBlock</span>(<span class="string">&#x27;div&#x27;</span>, <span class="literal">null</span>, [</span><br><span class="line">            <span class="title function_">_createVNode</span>(<span class="string">&#x27;div&#x27;</span>,&#123; <span class="attr">onClick</span>: _ctx.<span class="property">todo</span>&#125;, <span class="string">&#x27;做点有趣的事&#x27;</span>, <span class="number">8</span> <span class="comment">/* PROPS */</span>,</span><br><span class="line">                [<span class="string">&#x27;onClick&#x27;</span>]),</span><br><span class="line">        ])</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">render</span>(<span class="params">...</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="title function_">_openBlock</span>(),<span class="title function_">_createBlock</span>(<span class="string">&#x27;div&#x27;</span>, <span class="literal">null</span>, [</span><br><span class="line">            <span class="title function_">_createVNode</span>(<span class="string">&#x27;div&#x27;</span>,&#123;</span><br><span class="line">                    <span class="attr">onClick</span>:    <span class="comment">//开启监听后</span></span><br><span class="line">                        _cache[<span class="number">1</span>] || (_cache[<span class="number">1</span>] = <span class="function">(<span class="params">...args</span>) =&gt;</span>_ctx.<span class="title function_">todo</span>(...args)),</span><br><span class="line">                &#125;,<span class="string">&#x27;做点有趣的事&#x27;</span>),</span><br><span class="line">        ])</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Diff算法优化"><a href="#Diff算法优化" class="headerlink" title="Diff算法优化"></a>Diff算法优化</h3><p>vue2的diff算法是全量的对比，vue3中新增了静态标记patchFlags，在进行diff的时候，只对比带有pathflags的节点，还可以通过patchflags知道要对比的具体内容，从而减少了diff的次数，提升Diff算法的效率。</p>
+<h3 id="全面支持tree-shaking"><a href="#全面支持tree-shaking" class="headerlink" title="全面支持tree-shaking"></a>全面支持tree-shaking</h3><p>在vue2中，全局的api都是暴漏在Vue实例上，即使没有使用，也无法通过tree-shaking进行消除。vue3对全局和内部的API进行重构时，增加了对tree-shaking的支持，如果在项目中未使用nexttick api，那么在打包的时候就会将未使用的api移除掉，最终获得最小打包体积。</p>
+<h3 id="全面支持TypeScript"><a href="#全面支持TypeScript" class="headerlink" title="全面支持TypeScript"></a>全面支持TypeScript</h3><p>Vue3使用TypeScript重写，相较于Vue2有更好的TypeScript支持</p>
+<ul>
+<li>Vue2 Options API 中 option 是个简单对象，而 TypeScript 是一种类型系统，面向对象的语法，不是特别匹配</li>
+<li>Vue2 需要vue-class-component强化vue原生组件，也需要vue-property-decorator增加更多结合Vue特性的装饰器，写法比较繁琐</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://superjunjie.github.io/blog">Jerry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://superjunjie.github.io/blog/2022/10/12/vue2-vs-vue3/">https://superjunjie.github.io/blog/2022/10/12/vue2-vs-vue3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/blog/./img/18.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/2022/10/12/tsl/"><img class="prev-cover" src="/blog/./img/17.webp" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">TSL安全传输</div></div></a></div><div class="next-post pull-right"><a href="/blog/2022/10/12/webpack-op/"><img class="next-cover" src="/blog/./img/19.webp" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">webpack性能优化</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/blog/img/avatar.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jerry</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/superjunjie"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/superjunjie" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:pcxiaoyan@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">响应式对比</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vue2%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">Vue2响应式原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">Vue3响应式原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#composition-Vs-options"><span class="toc-number">2.</span> <span class="toc-text">composition Vs options</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#options-api"><span class="toc-number">2.1.</span> <span class="toc-text">options api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#composition-api"><span class="toc-number">2.2.</span> <span class="toc-text">composition api</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%AF%B9%E6%AF%94"><span class="toc-number">3.</span> <span class="toc-text">生命周期对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue3%E7%9B%B8%E8%BE%83%E4%BA%8EVue2%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text">Vue3相较于Vue2的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%A4%9A%E6%A0%B9%E8%8A%82%E7%82%B9"><span class="toc-number">4.1.</span> <span class="toc-text">支持多根节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6%EF%BC%88Supense%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">支持异步组件（Supense）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81Teleport"><span class="toc-number">4.3.</span> <span class="toc-text">支持Teleport</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E8%8A%82%E7%82%B9hoistStatic%E6%8F%90%E5%8D%87"><span class="toc-number">4.4.</span> <span class="toc-text">静态节点hoistStatic提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E9%9D%99%E6%80%81%E6%A0%87%E8%AE%B0%EF%BC%88pathFlags%EF%BC%89"><span class="toc-number">4.5.</span> <span class="toc-text">增加静态标记（pathFlags）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BC%93%E5%AD%98cacheHandlers"><span class="toc-number">4.6.</span> <span class="toc-text">事件缓存cacheHandlers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Diff%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96"><span class="toc-number">4.7.</span> <span class="toc-text">Diff算法优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E9%9D%A2%E6%94%AF%E6%8C%81tree-shaking"><span class="toc-number">4.8.</span> <span class="toc-text">全面支持tree-shaking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E9%9D%A2%E6%94%AF%E6%8C%81TypeScript"><span class="toc-number">4.9.</span> <span class="toc-text">全面支持TypeScript</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/nav/" title="浏览器导航流程"><img src="/blog/./img/14.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="浏览器导航流程"/></a><div class="content"><a class="title" href="/blog/2022/10/12/nav/" title="浏览器导航流程">浏览器导航流程</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/regex/" title="正则表达式"><img src="/blog/./img/15.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="正则表达式"/></a><div class="content"><a class="title" href="/blog/2022/10/12/regex/" title="正则表达式">正则表达式</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/tcp/" title="TCP"><img src="/blog/./img/16.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="TCP"/></a><div class="content"><a class="title" href="/blog/2022/10/12/tcp/" title="TCP">TCP</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/tsl/" title="TSL安全传输"><img src="/blog/./img/17.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="TSL安全传输"/></a><div class="content"><a class="title" href="/blog/2022/10/12/tsl/" title="TSL安全传输">TSL安全传输</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/10/12/vue2-vs-vue3/" title="Vue2 vs Vue3"><img src="/blog/./img/18.webp" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Vue2 vs Vue3"/></a><div class="content"><a class="title" href="/blog/2022/10/12/vue2-vs-vue3/" title="Vue2 vs Vue3">Vue2 vs Vue3</a><time datetime="2022-10-12T00:00:00.000Z" title="Created 2022-10-12 08:00:00">2022-10-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Jerry</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
